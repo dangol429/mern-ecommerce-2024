@@ -65,7 +65,7 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
@@ -76,10 +76,10 @@ function HeaderRightContent() {
   }
 
   useEffect(() => {
-    dispatch(fetchCartItems(user?.id));
-  }, [dispatch]);
-
-  console.log(cartItems, "sangam");
+    if (isAuthenticated) {
+      dispatch(fetchCartItems(user?.id));
+    }
+  }, [dispatch, isAuthenticated, user]);
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
@@ -110,22 +110,33 @@ function HeaderRightContent() {
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black">
             <AvatarFallback className="bg-black text-white font-extrabold">
-              {user?.userName[0].toUpperCase()}
+              {user?.userName ? user.userName[0].toUpperCase() : "U"}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" className="w-56">
-          <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {isAuthenticated ? `Logged in as ${user?.userName}` : "Guest"}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-            <UserCog className="mr-2 h-4 w-4" />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </DropdownMenuItem>
+          {isAuthenticated ? (
+            <>
+              <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+                <UserCog className="mr-2 h-4 w-4" />
+                Account
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </DropdownMenuItem>
+            </>
+          ) : (
+            <DropdownMenuItem onClick={() => navigate("/auth/login")}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Login
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -157,7 +168,6 @@ function ShoppingHeader() {
         <div className="hidden lg:block">
           <MenuItems />
         </div>
-
         <div className="hidden lg:block">
           <HeaderRightContent />
         </div>
