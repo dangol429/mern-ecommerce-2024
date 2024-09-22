@@ -43,8 +43,10 @@ function App() {
         <Route
           path="/"
           element={
-            
-            <ShoppingHome></ShoppingHome>
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+            ></CheckAuth>
           }
         />
         <Route

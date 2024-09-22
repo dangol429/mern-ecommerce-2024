@@ -65,7 +65,7 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
@@ -76,10 +76,9 @@ function HeaderRightContent() {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(fetchCartItems(user?.id));
-    }
-  }, [dispatch, isAuthenticated, user]);
+    dispatch(fetchCartItems(user?.id));
+  }, [dispatch]);
+
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
@@ -110,33 +109,22 @@ function HeaderRightContent() {
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black">
             <AvatarFallback className="bg-black text-white font-extrabold">
-              {user?.userName ? user.userName[0].toUpperCase() : "U"}
+              {user?.userName[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" className="w-56">
-          <DropdownMenuLabel>
-            {isAuthenticated ? `Logged in as ${user?.userName}` : "Guest"}
-          </DropdownMenuLabel>
+        <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {isAuthenticated ? (
-            <>
-              <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-                <UserCog className="mr-2 h-4 w-4" />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </DropdownMenuItem>
-            </>
-          ) : (
-            <DropdownMenuItem onClick={() => navigate("/auth/login")}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Login
+            <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+              <UserCog className="mr-2 h-4 w-4" />
+              Account
             </DropdownMenuItem>
-          )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -144,7 +132,6 @@ function HeaderRightContent() {
 }
 
 function ShoppingHeader() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">

@@ -30,7 +30,6 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
-import ShoppingHeader from "@/components/shopping-view/header";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -119,7 +118,6 @@ function ShoppingHome() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <ShoppingHeader></ShoppingHeader>
       <div className="relative w-full h-[400px] md:h-[600px] overflow-hidden">
         {[bannerOne, bannerTwo, bannerThree].map((banner, index) => (
           <img
